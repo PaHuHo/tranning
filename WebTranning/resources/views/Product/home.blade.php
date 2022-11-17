@@ -47,7 +47,7 @@
                         <i class="fa fa-search"></i>Tìm kiếm</button>
                 </div>
                 <div class="col-4 delete-search">
-                    <a class="btn btn-primary">
+                    <a class="btn btn-success">
                         <i class="fa fa-times"></i>Xóa tìm</a>
                 </div>
             </div>

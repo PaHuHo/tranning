@@ -81,6 +81,16 @@ class CustomerController extends Controller
     public function storeEdit(Request $request)
     {
         $customer = MstCustomer::where('customer_id', $request->id)->first();
+        if ($request->action == "delete") {
+
+            $customer->update(array(
+                'is_active' => 0,
+            ));
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Xóa thành công',
+            ]);
+        }
         $messages = [
             'name.required' => 'Vui lòng nhập tên khách hàng',
             'name.min' => 'Tên khách hàng phải lớn hơn 5 ký tự',
@@ -139,7 +149,7 @@ class CustomerController extends Controller
                     });
             })->orderBy('updated_at', 'desc')->get();
         }
-        if($listCustomer->count()==0){
+        if ($listCustomer->count() == 0) {
             return redirect()->back()->with('fail-export', 'Không có dữ liệu để export');
         }
         return Excel::download(new ExportCustomer($listCustomer), 'customer-' . time() . '.xls');

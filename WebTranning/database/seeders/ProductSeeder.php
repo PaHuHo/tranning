@@ -40,7 +40,7 @@ class ProductSeeder extends Seeder
     //     ]);}
         for($i=0;$i<100;$i++){
             MstProduct::create([
-                'product_id' => 'SP '.($i+1),
+                'product_id' =>'S' . substr("000000000", strlen($i + 1)) . ($i + 1),
                 'product_name' => 'Sản phẩm '.($i+1),
                 'product_price' => rand(10,100),
                 'is_sales' => rand(0,1)

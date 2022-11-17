@@ -1,0 +1,55 @@
+* {
+    font-family: 'Open Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* .header{
+    height: 50px;
+} */
+#active {
+    color: white;
+    background-color: red;
+}
+
+#active a {
+    color: white;
+}
+
+a>i {
+    margin-right: 10px;
+}
+
+button>i {
+    margin-right: 10px;
+}
+
+div#pop-up {
+    display: none;
+    position: absolute;
+    width: 280px;
+    padding: 10px;
+    background: #eeeeee;
+    color: #000000;
+    border: 1px solid #1a1a1a;
+    font-size: 90%;
+}
+div.hover_container .image
+{
+    display: none; /* hidden by default */
+    width: 200px; /* same width as container */
+    height: 200px; /* same height as container */
+}
+div.hover_container .image img
+{
+    width: 200px; /* width of the image */
+    height: 200px; /* height of the image */
+}
+div.hover_container:hover .image
+{
+    display: block; /* shown when hovering the container */
+    display: inline;
+    position: absolute;
+    z-index: 2;
+    margin-left: 60px;
+}

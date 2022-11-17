@@ -1,0 +1,21 @@
+*{
+    font-family: 'Open Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.container{
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+.box{
+    width:400px;
+    height: 450px;
+    margin-top: 250px;
+    border-radius: 15px;
+    transition: 1s;
+}
+
+button >i{
+    margin-right: 10px;
+}

@@ -117,13 +117,14 @@ class ProductController extends Controller
         //dd($request->hasFile('product_image'));
         $product = MstProduct::where('product_id', $id)->first();
         if ($request->hasFile('product_image')) {
+            if (file_exists(public_path() . '/storage/' . $product->product_image)) {
+                @unlink(public_path() . '/storage/' . $product->product_image,);
+            }
             $image = $request->product_image;
             $fileName = $product->product_id . "." . $request->file('product_image')->extension();
             $resized_img = Image::make($image)->resize(512, 512)->stream();
             Storage::disk('public')->put('profile/' . $fileName, $resized_img);
-            if (file_exists(public_path() . '/storage/' . $product->product_image)) {
-                @unlink(public_path() . '/storage/' . $product->product_image,);
-            }
+            
             $product_image = "profile/" . $fileName;
         } else {
             $product_image = $product->product_image;

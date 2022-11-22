@@ -22,7 +22,7 @@
                     <div class="image">
                         <!-- <img src="https://upload.wikimedia.org/wikipedia/commons/8/8a/Banana-Single.jpg" alt="" /> -->
 
-                        <img src="{{!$product->product_image ? asset('assets/dist/img/default-150x150.png') : asset('storage/'.$product->product_image) }}" alt="" width="200" height="200" />
+                        <img src="{{!$product->product_image ? asset('assets/dist/img/default-150x150.png') : asset($product->product_image) }}" alt="" width="200" height="200" />
                     </div>
                 </div>
                 <!-- <a class="trigger" style="text-decoration: none">{{ $product->product_name}}</a>

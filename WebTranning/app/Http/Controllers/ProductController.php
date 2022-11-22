@@ -100,8 +100,8 @@ class ProductController extends Controller
             $image = $request->product_image;
             $fileName = $product->product_id . "." . $request->file('product_image')->extension();
             $resized_img = Image::make($image)->resize(512, 512)->stream();
-            Storage::disk('public')->put('profile/' . $fileName, $resized_img);
-            $product->product_image = "profile/" . $fileName;
+            Storage::disk('public')->put('product-img/' . $fileName, $resized_img);
+            $product->product_image = "product-img/" . $fileName;
         }
         $product->save();
         return redirect()->route('list-product');
@@ -123,9 +123,9 @@ class ProductController extends Controller
             $image = $request->product_image;
             $fileName = $product->product_id . "." . $request->file('product_image')->extension();
             $resized_img = Image::make($image)->resize(512, 512)->stream();
-            Storage::disk('public')->put('profile/' . $fileName, $resized_img);
+            Storage::disk('public')->put('product-img/' . $fileName, $resized_img);
             
-            $product_image = "profile/" . $fileName;
+            $product_image = "product-img/" . $fileName;
         } else {
             $product_image = $product->product_image;
         }

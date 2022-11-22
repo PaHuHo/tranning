@@ -53,7 +53,7 @@
             <br>
             <div class="form-group row" style="margin-right: 300px;">
                 <!-- <img id="photo" src="{{asset('assets/dist/img/default.png')}}" width="500" height="200"> -->
-                <img id="photo" src="{{!$product->product_image ? asset('assets/dist/img/default.png') : asset('storage/'.$product->product_image) }}" width="500" height="200">
+                <img id="photo" src="{{!$product->product_image ? asset('assets/dist/img/default.png') : asset($product->product_image) }}" width="500" height="200">
             </div>
             <br>
             <input type='file' id="upload" name="product_image" class="file" accept="image/*" onchange="document.getElementById('photo').src = window.URL.createObjectURL(this.files[0])" />

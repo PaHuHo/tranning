@@ -1,6 +1,6 @@
 {{$listCustomer->links('pagination')}}
 <!-- id="editable" -->
-<table style="margin:10px;" class="table table-striped" id="editable">
+<table style="margin:10px;" class="table table-striped" id="{{$listCustomer->count()>0?'editable':''}}">
     <thead>
         <tr class="table-danger" style="--bs-table-bg: red; color:white">
             <th scope="col">#</th>

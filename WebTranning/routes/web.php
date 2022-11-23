@@ -23,7 +23,7 @@ Route::get('/logout', [UserController::class, 'logout'])->name('logout');
 
 Route::middleware('auth')->group(function () {
     Route::get('/', function () {
-        return view('welcome');
+        return redirect()->route('list-product');
     });
     Route::get('/product', [ProductController::class, 'index'])->name('list-product');
     Route::get('/product/fetch_data', [ProductController::class, 'fetchData'])->name("fetch-data-product");

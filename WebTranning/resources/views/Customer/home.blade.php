@@ -268,7 +268,7 @@
         $(document).on('click', '.delete-search a', function(event) {
             event.preventDefault();
             var page = 1
-            $("#name").val("");
+            $("#customer_name").val("");
             $("#email").val("");
             $("#address").val("");
 

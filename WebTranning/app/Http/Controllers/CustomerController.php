@@ -9,31 +9,67 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Validators\ValidationException;
+use MeiliSearch\Client;
+use MeiliSearch\Endpoints\Indexes;
 
 class CustomerController extends Controller
 {
     public function index()
     {
+        $client = new Client('http://localhost:7700', 'masterKey');
+        $client->index('mst_customer')->updateSortableAttributes([
+            'updated_at',
+        ]);
+        $client->index('mst_customer')->updateFilterableAttributes(['email', 'is_active', 'address']);
+        $client->index('mst_customer')->updateSearchableAttributes([
+            'customer_name',
+        ]);
+
         $listCustomer = MstCustomer::orderBy('updated_at', 'desc')->paginate(20);
+
         return View('Customer/home', ['listCustomer' => $listCustomer]);
     }
     public function fetchData(Request $request)
     {
         if ($request->ajax()) {
             // $listProduct = MstProduct::orderBy('created_at','desc')->paginate(25);
-            $listCustomer = MstCustomer::Where(function ($q) use ($request) {
-                $q->when($request->filled('name'), function ($q) use ($request) {
-                    $q->where('customer_name', 'LIKE', '%' . $request->name . '%');
-                })->when($request->filled('email'), function ($q) use ($request) {
-                    $q->where('email', 'LIKE', '%' . $request->email . '%');
-                })
-                    ->when($request->filled('is_active'), function ($q) use ($request) {
-                        $q->where('is_active', $request->is_active);
-                    })
-                    ->when($request->filled('address'), function ($q) use ($request) {
-                        $q->where('address', 'LIKE', '%' . $request->address . '%');
-                    });
-            })->orderBy('updated_at', 'desc')->paginate(20)->appends($request->except(['page', '_token']));
+            // $listCustomer = MstCustomer::Where(function ($q) use ($request) {
+            //     $q->when($request->filled('name'), function ($q) use ($request) {
+            //         $q->where('customer_name', 'LIKE', '%' . $request->name . '%');
+            //     })->when($request->filled('email'), function ($q) use ($request) {
+            //         $q->where('email', 'LIKE', '%' . $request->email . '%');
+            //     })
+            //         ->when($request->filled('is_active'), function ($q) use ($request) {
+            //             $q->where('is_active', $request->is_active);
+            //         })
+            //         ->when($request->filled('address'), function ($q) use ($request) {
+            //             $q->where('address', 'LIKE', '%' . $request->address . '%');
+            //         });
+            // })->orderBy('updated_at', 'desc')->paginate(20)->appends($request->except(['page', '_token']));
+
+
+            //dd($client->index('mst_customer')->search($request->name,['sort' => ['updated_at:desc']]));
+            // $listCustomer=$client->index('mst_customer')->search($request->name,['sort' => ['price:desc']])->paginate(20)->appends($request->except(['page', '_token']));
+            
+            $listCustomer = MstCustomer::search("  ", function ($index, $query, $options) use ($request) {
+                $client = new Client('http://localhost:7700', 'masterKey');
+                $options['sort']=['updated_at:desc'];
+                if (isset($request->name)) {
+                    $client->index('mst_customer')->updateSearchableAttributes([
+                        'customer_name',
+                    ]);
+                    if (isset($request->is_active)) {
+                        $options['filter'] = "(is_active =" . $request->is_active . ")";
+                    }
+                    return $index->search($request->name, $options);
+                }
+                
+                if (isset($request->is_active)) {
+                    $options['filter'] = "(is_active =" . $request->is_active . ")";
+                }
+                
+                return $index->search($query, $options);
+            })->paginate(20)->appends($request->except(['page', '_token']));            
             return View('Customer/customer-data', ['listCustomer' => $listCustomer])->render();
         }
     }
@@ -83,9 +119,11 @@ class CustomerController extends Controller
         $customer = MstCustomer::where('customer_id', $request->id)->first();
         if ($request->action == "delete") {
 
-            $customer->update(array(
-                'is_active' => 0,
-            ));
+            // $customer->update(array(
+            //     'is_active' => 0,
+            // ));
+            $customer->is_active = 0;
+            $customer->save();
             return response()->json([
                 'status' => 'success',
                 'message' => 'Xóa thành công',
@@ -116,13 +154,21 @@ class CustomerController extends Controller
                 'message' => $validator->errors()->all(),
             ]);
         }
-        $customer->update(array(
-            'customer_name' => $request->name,
-            'email' => $request->email,
-            'address' => $request->address,
-            'tel_num' => $request->phone,
-            'is_active' => $request->is_active == 1 ? 1 : 0,
-        ));
+        // $customer->update(array(
+        //     'customer_name' => $request->name,
+        //     'email' => $request->email,
+        //     'address' => $request->address,
+        //     'tel_num' => $request->phone,
+        //     'is_active' => $request->is_active == 1 ? 1 : 0,
+        // ));
+
+        $customer->customer_name = $request->name;
+        $customer->email = $request->email;
+        $customer->address = $request->address;
+        $customer->tel_num = $request->phone;
+        $customer->is_active = $request->is_active == 1 ? 1 : 0;
+        $customer->save();
+
         // return response()->json(['success'=>'Thêm thành công']);
         return response()->json([
             'status' => 'success',

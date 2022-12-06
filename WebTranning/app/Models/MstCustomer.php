@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
+
 
 class MstCustomer extends Model
 {
-    use HasFactory;
+    use HasFactory,Searchable;
     public $primaryKey = 'customer_id';
     protected $table = "mst_customer";
     protected $fillable = [

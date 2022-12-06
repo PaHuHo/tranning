@@ -7,6 +7,7 @@ use App\Models\MstProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManagerStatic as Image;
+use MeiliSearch\Http\Client;
 
 class ProductController extends Controller
 {
@@ -124,7 +125,7 @@ class ProductController extends Controller
             $fileName = $product->product_id . "." . $request->file('product_image')->extension();
             $resized_img = Image::make($image)->resize(512, 512)->stream();
             Storage::disk('public')->put('product-img/' . $fileName, $resized_img);
-            
+
             $product_image = "product-img/" . $fileName;
         } else {
             $product_image = $product->product_image;
